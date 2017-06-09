@@ -13,8 +13,8 @@ syntax on
 " Vim UI
 "--------
 " color scheme
-set background=dark
-color solarized
+" set background=dark
+" color solarized
 
 " highlight current line
 au WinLeave * set nocursorline nocursorcolumn
@@ -71,6 +71,9 @@ autocmd Syntax javascript set syntax=jquery   " JQuery syntax support
 let g:html_indent_inctags = "html,body,head,tbody"
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
+
+" leader key
+let mapleader = "\<Space>"
 
 "-----------------
 " Plugin settings
@@ -194,6 +197,18 @@ let g:SuperTabRetainCompletionType=2
 " ctrlp
 set wildignore+=*/tmp/*,*.so,*.o,*.a,*.obj,*.swp,*.zip,*.pyc,*.pyo,*.class,.DS_Store  " MacOSX/Linux
 let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
+let g:ctrlp_use_caching = 0
+
+" hu add
+if executable('ag')
+"    set grepprg=ag --nogroup --nocolor
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+else
+    let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+    let g:ctrlp_prompt_mappings = {
+    'AcceptSelection("e")': ['<space>', '<cr>', '<2-LeftMouse>'],
+    }
+endif
 
 " Keybindings for plugin toggle
 nnoremap <F2> :set invpaste paste?<CR>
@@ -203,8 +218,18 @@ nmap <F6> :NERDTreeToggle<cr>
 nmap <F3> :GundoToggle<cr>
 nmap <F4> :IndentGuidesToggle<cr>
 nmap  <D-/> :
-nnoremap <leader>a :Ack
-nnoremap <leader>v V`]
+
+" Ack usage:
+"
+" ?           帮助，显示所有快捷键
+" Enter/o     打开文件
+" O           打开文件并关闭Quickfix
+" go          预览文件，焦点仍然在Quickfix
+" t           新标签页打开文件
+" q           关闭Quickfix
+nnoremap <Leader>a :Ack<space>
+
+nnoremap <Leader>v V`]
 
 "------------------
 " Useful Functions
@@ -227,8 +252,8 @@ autocmd BufReadPost *
 cmap w!! %!sudo tee >/dev/null %
 
 " Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
+nmap <silent> <Leader>ev :e $MYVIMRC<CR>
+nmap <silent> <Leader>sv :so $MYVIMRC<CR>
 
 " sublime key bindings
 nmap <D-]> >>
@@ -266,3 +291,42 @@ if has("gui_running")
     map <D-9> 9gt
     map <D-0> :tablast<CR>
 endif
+
+
+" =========================== hu add ============================
+"
+" vim-expand-region
+vmap v <Plug>(expand_region_expand)
+vmap <C-v> <Plug>(expand_region_shrink)
+
+" ack.vim
+let g:ackprg = 'ag --nogroup --nocolor --column'
+
+" 使用 <Space>o 创建一个新文件
+nnoremap <Leader>o :CtrlP<CR>
+" 使用 <Space>w 保存文件
+nnoremap <Leader>w :w<CR>
+" 使用 <Space>p 与 <Space>y 进行剪切板拷贝、粘贴
+vmap <Leader>y "+y
+vmap <Leader>d "+d
+nmap <Leader>p "+p
+nmap <Leader>P "+P
+vmap <Leader>p "+p
+vmap <Leader>P "+P
+
+" 使用 ppppp 进行多行多次粘贴操作
+vnoremap <silent> y y`]
+vnoremap <silent> p p`]
+nnoremap <silent> p p`]
+
+
+" 通过以下的配置可以避免缓冲区的内容被删除的文本内容所覆盖（放到~/.vimrc文件的最后）
+function! RestoreRegister()
+    let @" = s:restore_reg
+    return ''
+endfunction
+function! s:Repl()
+    let s:restore_reg = @"
+    return "p@=RestoreRegister()<cr>"
+endfunction
+vmap <silent> <expr> p <sid>Repl()

@@ -25,7 +25,7 @@ Bundle 'tomtom/tlib_vim'
 "-----------------
 " Fast navigation
 "-----------------
-Bundle 'edsono/vim-matchit'
+Bundle 'jwhitley/vim-matchit'
 Bundle 'Lokaltog/vim-easymotion'
 
 "--------------
@@ -41,7 +41,8 @@ Bundle 'nathanaelkane/vim-indent-guides'
 " IDE features
 "--------------
 Bundle 'scrooloose/nerdtree'
-Bundle 'humiaozuzu/TabBar'
+" Bundle 'humiaozuzu/TabBar'
+Bundle 'vim-scripts/TabBar'
 Bundle 'majutsushi/tagbar'
 Bundle 'mileszs/ack.vim'
 Bundle 'kien/ctrlp.vim'
@@ -49,6 +50,8 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'scrooloose/syntastic'
 Bundle 'bronson/vim-trailing-whitespace'
+
+Bundle 'terryma/vim-expand-region'
 
 "-------------
 " Other Utils
