@@ -52,6 +52,8 @@ Bundle 'scrooloose/syntastic'
 Bundle 'bronson/vim-trailing-whitespace'
 
 Bundle 'terryma/vim-expand-region'
+Bundle 'wincent/command-t'
+Bundle 'brookhong/cscope.vim'
 
 "-------------
 " Other Utils

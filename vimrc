@@ -26,6 +26,7 @@ set incsearch
 "set highlight 	" conflict with highlight current line
 set ignorecase
 set smartcase
+set hlsearch
 
 " editor settings
 set history=1000
@@ -48,8 +49,8 @@ set matchpairs+=<:>                                               " specially fo
 " set relativenumber
 
 " Default Indentation
-set autoindent
-set smartindent     " indent when
+" set autoindent
+" set smartindent     " indent when
 set tabstop=4       " tab width
 set softtabstop=4   " backspace
 set shiftwidth=4    " indent width
@@ -210,6 +211,80 @@ else
     }
 endif
 
+"-----Command-T-----
+let g:CommandTFileScanner = 'ruby'   "使用ruby作为文件浏览
+let g:CommandTTraverseSCM = 'dir'    "根目录为执行vim时所在的目录
+"打开文件跳转
+nnoremap <silent> <Leader>f :CommandT<CR>
+
+"-----cscope-----
+" 加载cscope库
+" https://my.oschina.net/u/572632/blog/267471
+if has("cscope")
+if filereadable("cscope.out")
+    cs add cscope.out
+elseif $CSCOPE_DB  != ""
+    cs add $CSCOPE_DB
+else
+    let cscope_file=findfile("cscope.out", ".;")
+    let cscope_pre=matchstr(cscope_file, ".*/")
+    "if !empty(cscope_file) &&
+        "filereadable(cscope_file)
+        "exe "cs add" cscope_file cscope_pre
+    "endif
+endif
+endif
+
+
+" set cscopequickfix=s-,c-,d-,i-,t-,e- "使用quickfix窗口显示结果
+set cscopequickfix=s0,c0,d0,i0,t0,e0 " ’0’或者不设置表示不使用quickfix窗口
+set cst                              "跳转时也使用cscope库
+set csto=0
+set cspc=0
+"打开引用窗口
+nnoremap <silent><Leader>cw :cw<CR>
+""重新生成索引文件
+nnoremap <silent><Leader>bc :!cscope -Rbq<CR>
+"s: 查找本C符号
+nnoremap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>
+"g: 查找本定义
+nnoremap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>
+"t: 查找本字符串
+nnoremap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>
+"e: 查找本egrep模式
+nnoremap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>
+"f: 查找本文件
+nnoremap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>
+"i: 查找包含本文件的文件
+nnoremap <C-@>i :scs find i <C-R>=expand("<cfile>")<CR><CR>
+"d: 查找本函数调用的函数
+nnoremap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>
+"c: 查找调用本函数的函数
+nnoremap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>
+
+nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
+nnoremap <leader>l :call ToggleLocationList()<CR>
+
+"s: Find this C symbol
+nnoremap  <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
+" g: Find this definition
+nnoremap  <leader>fg :call CscopeFind('g', expand('<cword>'))<CR>
+" d: Find functions called by this function
+nnoremap  <leader>fd :call CscopeFind('d', expand('<cword>'))<CR>
+" c: Find functions calling this function
+nnoremap  <leader>fc :call CscopeFind('c', expand('<cword>'))<CR>
+" t: Find this text string
+nnoremap  <leader>ft :call CscopeFind('t', expand('<cword>'))<CR>
+" e: Find this egrep pattern
+nnoremap  <leader>fe :call CscopeFind('e', expand('<cword>'))<CR>
+" f: Find this file
+nnoremap  <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
+" i: Find files #including this file
+nnoremap  <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
+
+
+
+
 " Keybindings for plugin toggle
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
@@ -295,6 +370,12 @@ endif
 
 " =========================== hu add ============================
 "
+" 重新生成标签
+nnoremap <silent><Leader>bt :!~/.vim/hitags.sh<CR>
+
+" 高亮标签
+nnoremap <silent><Leader>ht :so tags.vim<CR>
+
 " vim-expand-region
 vmap v <Plug>(expand_region_expand)
 vmap <C-v> <Plug>(expand_region_shrink)
@@ -319,6 +400,8 @@ vnoremap <silent> y y`]
 vnoremap <silent> p p`]
 nnoremap <silent> p p`]
 
+"删除行末空格
+nmap <leader>tt :%s/\s\+$//<CR>
 
 " 通过以下的配置可以避免缓冲区的内容被删除的文本内容所覆盖（放到~/.vimrc文件的最后）
 function! RestoreRegister()
@@ -330,3 +413,66 @@ function! s:Repl()
     return "p@=RestoreRegister()<cr>"
 endfunction
 vmap <silent> <expr> p <sid>Repl()
+
+
+"文件搜索路径
+"set path=.,/usr/include,,
+"
+"  " 控制
+"  set nocompatible              "关闭vi兼容
+"  filetype off                  "关闭文件类型侦测,vundle需要
+"  set fileencodings=utf-8,gbk   "使用utf-8或gbk编码方式
+"  syntax on                     "语法高亮
+"  set backspace=2               "退格键正常模式
+"  set whichwrap=<,>,[,]         "当光标到行首或行尾，允许左右方向键换行
+"  set autoread                  "文件在vim外修改过，自动重载
+"  set nobackup                  "不使用备份
+"  set confirm                   "在处理未保存或只读文件时，弹出确认消息
+"  set scrolloff=3               "光标移动到距离顶部或底部开始滚到距离
+"  set history=1000              "历史记录数
+"  set mouse=                    "关闭鼠标
+"  set selection=inclusive       "选择包含最后一个字符
+"  set selectmode=mouse,key      "启动选择模式的方式
+"  set completeopt=longest,menu  "智能补全,弹出菜单，无歧义时才自动填充
+"  set noswapfile                "关闭交换文件
+"  set hidden                    "允许在有未保存的修改时切换缓冲区
+"
+"    "显示
+"    colorscheme mycolor           "选择配色方案
+"    set t_Co=256                  "可以使用的颜色数目
+"    set number                    "显示行号
+"    set laststatus=2              "显示状态行
+"    set ruler                     "显示标尺
+"    set showcmd                   "显示输入的命令
+"    set showmatch                 "高亮括号匹配
+"    set matchtime=1               "匹配括号高亮的时间(十分之一秒)
+"    set matchpairs={:},(:)        "匹配括号"{}"()"
+"    set hlsearch                  "检索时高亮匹配项
+"    set incsearch                 "边检索边显示匹配
+"    set go-=T                     "去除gvim的toolbar
+"
+"      "格式
+"      set noexpandtab               "不要将tab转换为空格
+"      set shiftwidth=4              "自动缩进的距离,也是平移字符的距离
+"      set tabstop=4                 "tab键对应的空格数
+"      set autoindent                "自动缩进
+"      set smartindent               "智能缩进
+"
+"
+"          "===================按键映射======================
+"
+"
+"              "使用Ctrl-l 和 Ctrl+h 切换标签页
+"              nnoremap <C-l> gt
+"              nnoremap <c-h> gT
+"
+"                "在行末加上分号
+"                nnoremap <silent> <Leader>; :<Esc><End>a<Space>;<Esc><Down>
+"                "保存
+"                nnoremap <C-s> :w<CR>
+"                "替换
+"                nnoremap <C-h>
+"                :%s/<C-R>=expand("<cword>")<CR>/<C-R>=expand("<cword>")<CR>
+"                ))>)"
+"
+"                %s/\s\+$//   删掉末尾空格
