@@ -222,6 +222,7 @@ nnoremap <silent> <Leader>f :CommandT<CR>
 " https://my.oschina.net/u/572632/blog/267471
 if has("cscope")
 if filereadable("cscope.out")
+    set nocscopeverbose
     cs add cscope.out
 elseif $CSCOPE_DB  != ""
     cs add $CSCOPE_DB
@@ -371,7 +372,7 @@ endif
 " =========================== hu add ============================
 "
 " 重新生成标签
-nnoremap <silent><Leader>bt :!~/.vim/hitags.sh<CR>
+nnoremap <silent><Leader>bt :!~/.vim/htags.sh<CR>
 
 " 高亮标签
 nnoremap <silent><Leader>ht :so tags.vim<CR>
