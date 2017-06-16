@@ -19,7 +19,7 @@ syntax on
 " highlight current line
 au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
-set cursorline cursorcolumn
+"set cursorline cursorcolumn
 
 " search
 set incsearch
@@ -75,6 +75,10 @@ let g:html_indent_style1 = "inc"
 
 " leader key
 let mapleader = "\<Space>"
+
+nmap <leader><leader>w :wa<cr>
+nmap <leader><leader>q :wqa<cr>
+nmap <leader>m :set modifiable<cr>
 
 "-----------------
 " Plugin settings
@@ -211,6 +215,19 @@ else
     }
 endif
 
+
+" vimgrep /匹配模式/[g][j] 要搜索的文件/范围
+" g：表示是否把每一行的多个匹配结果都加入
+" j：表示是否搜索完后定位到第一个匹配位置
+" vimgrep /pattern/ %           在当前打开文件中查找
+" vimgrep /pattern/ *             在当前目录下查找所有
+" vimgrep /pattern/ **            在当前目录及子目录下查找所有
+" vimgrep /pattern/ *.c          查找当前目录下所有.c文件
+" vimgrep /pattern/ **/*         只查找子目录]]
+
+"               在当前文件中快速查找光标下的单词
+nmap <leader>lv :lv /<c-r>=expand("<cword>")<cr>/ %<cr>:lw<cr>
+
 "-----Command-T-----
 let g:CommandTFileScanner = 'ruby'   "使用ruby作为文件浏览
 let g:CommandTTraverseSCM = 'dir'    "根目录为执行vim时所在的目录
@@ -284,8 +301,6 @@ nnoremap  <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
 nnoremap  <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
 
 
-
-
 " Keybindings for plugin toggle
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
@@ -303,6 +318,14 @@ nmap  <D-/> :
 " go          预览文件，焦点仍然在Quickfix
 " t           新标签页打开文件
 " q           关闭Quickfix
+"
+map <buffer> <leader><space> :w<cr>:make<cr>
+nnoremap <Leader>N :cn<cr>
+nnoremap <Leader>cp :cp<cr>
+nnoremap <Leader>W :cw 10<cr>
+nnoremap <Leader>O :copen 10<cr>
+nnoremap <Leader>C :cclose<cr>
+
 nnoremap <Leader>a :Ack<space>
 
 nnoremap <Leader>v V`]
@@ -477,3 +500,4 @@ vmap <silent> <expr> p <sid>Repl()
 "                ))>)"
 "
 "                %s/\s\+$//   删掉末尾空格
+"
