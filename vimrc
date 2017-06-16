@@ -15,6 +15,7 @@ syntax on
 " color scheme
 " set background=dark
 " color solarized
+colorscheme desert
 
 " highlight current line
 au WinLeave * set nocursorline nocursorcolumn
@@ -195,10 +196,40 @@ let g:neocomplcache_omni_patterns.erlang = '[a-zA-Z]\|:'
 let g:SuperTabDefaultCompletionType = '<C-X><C-U>'
 let g:SuperTabRetainCompletionType=2
 
+" quickfix
+nnoremap <Leader>D :cc<CR>
+nnoremap <Leader>O :copen 5<CR>
+nnoremap <Leader>C :cclose<CR>
+nnoremap <Leader>F :col<CR>
+nnoremap <Leader>W :cw<CR>
+nnoremap <Leader>L :cl<CR>
+nnoremap <Leader>P :cp<CR>
+nnoremap <Leader>N :cn<CR>
+nnoremap <Leader>X :cnew<CR>
+
+
+
+
 " ctrlp
 set wildignore+=*/tmp/*,*.so,*.o,*.a,*.obj,*.swp,*.zip,*.pyc,*.pyo,*.class,.DS_Store  " MacOSX/Linux
-let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
 let g:ctrlp_use_caching = 0
+"修改QuickFix窗口显示的最大条目数
+let g:ctrlp_max_height = 5
+let g:ctrlp_match_window_reversed = 0
+"默认使用全路径搜索，置1后按文件名搜索，准确率会有所提高，可以用<C-d>进行切换
+let g:ctrlp_by_filename = 1
+"调用ag进行搜索提升速度，同时不使用缓存文件
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --nocolor
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g "'
+      let g:ctrlp_use_caching = 0
+endif
+
+"设置搜索时忽略的文件
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.(git|hg|svn|rvm)$',
+        \ 'file': '\v\.(exe|so|dll|zip|tar|tar.gz|pyc|vim|out)$',
+            \ }
 
 " hu add
 if executable('ag')
@@ -303,7 +334,8 @@ nmap  <D-/> :
 " t           新标签页打开文件
 " q           关闭Quickfix
 nnoremap <Leader>a :Ack<space>
-
+" 忽略大小写
+nnoremap <Leader>A :Ack -i<space>
 nnoremap <Leader>v V`]
 
 "------------------
@@ -476,3 +508,29 @@ vmap <silent> <expr> p <sid>Repl()
 "                ))>)"
 "
 "                %s/\s\+$//   删掉末尾空格
+"
+" % 跳转到相配对的括号
+" gD 跳转到局部变量的定义处
+" '' 跳转到光标上次停靠的地方, 是两个', 而不是一个"
+" mx 设置书签,x只能是a-z的26个字母
+" `x 跳转到书签处("`"是1左边的键)
+" > 增加缩进,"x>"表示增加以下x行的缩进
+" < 减少缩进,"x<"表示减少以下x行的缩进
+" { 跳到上一段的开头
+" 跳到下一段的的开头
+" ( 移到这个句子的开头
+" ) 移到下一个句子的开头
+" [[ 跳转至上一个函数(要求代码块中'{'必须单独占一行)
+" ]] 跳转至下一个函数(要求代码块中'{'必须单独占一行)
+
+" C-] 跳转至函数或变量定义处
+" C-O 返回跳转前位置
+" C-T 同上
+" nC-T 返回跳转 n 次
+
+" 0 数字0,跳转至行首
+" ^ 跳转至行第一个非空字符
+" $ 跳转至行尾  })})">`")`
+"
+"
+" <C-R> 0 复制copy
