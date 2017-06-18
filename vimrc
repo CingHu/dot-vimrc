@@ -429,7 +429,7 @@ endif
 " =========================== hu add ============================
 "
 " 重新生成标签
-nnoremap <silent><Leader>bt :!~/.vim/htags.sh<CR>
+nnoremap <silent><Leader>bt :!~/.vim/hitags.sh<CR>
 
 " 高亮标签
 nnoremap <silent><Leader>ht :so tags.vim<CR>

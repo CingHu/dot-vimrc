@@ -20,3 +20,8 @@ Session.vim
 
 # bundles installed should be ignored
 bundle
+
+# vim plugin
+tags
+*.vim
+*.out
