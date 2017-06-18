@@ -18,16 +18,17 @@ syntax on
 colorscheme desert
 
 " highlight current line
-au WinLeave * set nocursorline nocursorcolumn
-au WinEnter * set cursorline cursorcolumn
-"set cursorline cursorcolumn
+" au WinLeave * set nocursorline nocursorcolumn
+" au WinEnter * set cursorline cursorcolumn
+" set cursorline cursorcolumn
 
 " search
 set incsearch
 "set highlight 	" conflict with highlight current line
-set ignorecase
 set smartcase
 set hlsearch
+set cc=80 " 设置标尺,高亮显示第80行
+set ignorecase
 
 " editor settings
 set history=1000
@@ -73,6 +74,8 @@ autocmd Syntax javascript set syntax=jquery   " JQuery syntax support
 let g:html_indent_inctags = "html,body,head,tbody"
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
+
+let g:auto_save = 1  " enable AutoSave on Vim startup"
 
 " leader key
 let mapleader = "\<Space>"
@@ -201,13 +204,12 @@ let g:SuperTabDefaultCompletionType = '<C-X><C-U>'
 let g:SuperTabRetainCompletionType=2
 
 " quickfix
-nnoremap <Leader>D :cc<CR>
-nnoremap <Leader>O :copen 5<CR>
+nnoremap <Leader>O :copen 7<CR>
 nnoremap <Leader>C :cclose<CR>
 nnoremap <Leader>F :col<CR>
 nnoremap <Leader>W :cw<CR>
 nnoremap <Leader>L :cl<CR>
-nnoremap <Leader>P :cp<CR>
+nnoremap <Leader>cp :cp<CR>
 nnoremap <Leader>N :cn<CR>
 nnoremap <Leader>X :cnew<CR>
 
@@ -558,3 +560,28 @@ vmap <silent> <expr> p <sid>Repl()
 "
 "
 " <C-R> 0 复制copy
+"
+"
+"
+"
+"
+" 折叠命令 zc 关闭当前打开的折叠
+" zo 打开当前的折叠
+"
+"
+" zm 关闭所有折叠
+" zM 关闭所有折叠及其嵌套的折叠
+" zr 打开所有折叠
+" zR 打开所有折叠及其嵌套的折叠
+"
+"
+" zd 删除当前折叠
+" zE 删除所有折叠
+"
+"
+" zj 移动至下一个折叠
+" zk 移动至上一个折叠
+"
+"
+" zn 禁用折叠
+" zN 启用折叠
